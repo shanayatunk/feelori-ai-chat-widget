@@ -42,7 +42,7 @@ const ChatWidget = () => {
     setIsLoading(true)
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch('https://feelori-ai-assistant.onrender.com/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
