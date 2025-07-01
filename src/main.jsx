@@ -3,8 +3,15 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 
-createRoot(document.getElementById('feelori-chat')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+export default function mountFeeloriChat() {
+  const rootElement = document.getElementById('feelori-chat');
+  if (rootElement) {
+    createRoot(rootElement).render(
+      <StrictMode>
+        <App />
+      </StrictMode>
+    );
+  } else {
+    console.error('FeelOri chat root element not found!');
+  }
+}
