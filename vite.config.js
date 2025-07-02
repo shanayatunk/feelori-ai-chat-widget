@@ -1,8 +1,8 @@
-// vite.config.js
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -16,9 +16,9 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/main.jsx'),
-      name: 'FeeloriChat', // very important, makes window.FeeloriChat
+      name: 'FeeloriChat', // important: attaches as window.FeeloriChat
       fileName: (format) => `feelori-chat-widget.${format}.js`,
-      formats: ['umd']
+      formats: ['umd'],
     },
     rollupOptions: {
       external: ['react', 'react-dom'],
@@ -29,5 +29,5 @@ export default defineConfig({
         },
       },
     },
-  }
+  },
 })
