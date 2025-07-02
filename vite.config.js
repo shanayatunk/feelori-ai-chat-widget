@@ -10,12 +10,16 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  // THIS IS THE FIX. It replaces the problematic code.
+  define: {
+    'process.env.NODE_ENV': JSON.stringify('production'),
+  },
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/main.jsx'),
       name: 'FeeloriChat', // attaches as window.FeeloriChat
       fileName: (format) => `feelori-chat-widget.${format}.js`,
-      formats: ['umd'], // single file usable in browsers
+      formats: ['umd'],
     },
   },
 })
