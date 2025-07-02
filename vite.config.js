@@ -10,14 +10,26 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5001',
-        changeOrigin: true,
-        secure: false,
+  // THIS IS THE NEW AND IMPORTANT PART
+  build: {
+    lib: {
+      entry: path.resolve(__dirname, 'src/main.jsx'),
+      name: 'FeeloriChat',
+      fileName: (format) => `feelori-chat-widget.${format}.js`,
+      formats: ['umd'] // Universal Module Definition
+    },
+    rollupOptions: {
+      // make sure to externalize deps that shouldn't be bundled
+      // into your library
+      external: ['react', 'react-dom'],
+      output: {
+        // Provide global variables to use in the UMD build
+        // for externalized deps
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+        },
       },
     },
-  },
+  }
 })
-
