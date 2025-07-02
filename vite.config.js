@@ -1,6 +1,7 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import path from 'path';
+// vite.config.js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
@@ -9,10 +10,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  define: {
+    'process.env.NODE_ENV': JSON.stringify('production'),
+  },
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/main.jsx'),
-      name: 'FeeloriChat',
+      name: 'FeeloriChat', // very important, makes window.FeeloriChat
       fileName: (format) => `feelori-chat-widget.${format}.js`,
       formats: ['umd']
     },
@@ -26,4 +30,4 @@ export default defineConfig({
       },
     },
   }
-});
+})
