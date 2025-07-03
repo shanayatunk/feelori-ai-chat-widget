@@ -42,7 +42,7 @@ const ChatWidget = () => {
     setIsLoading(true)
 
     try {
-	const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/chat`;
+	const apiUrl = `${import.meta.env.VITE_API_BASE_URL || 'https://feelori-ai-assistant.onrender.com'}/api/chat`;
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {

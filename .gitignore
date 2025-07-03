@@ -1,8 +1,6 @@
-# dependencies
+dependencies
 node_modules/
 
-# production build output
-dist/
 
 # logs
 npm-debug.log*
