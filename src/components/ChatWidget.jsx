@@ -1,12 +1,13 @@
-import { useState, useRef, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { MessageCircle, Send, X, User, Bot, ShoppingCart, ExternalLink } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { MessageCircle, Send, X, User, Bot, ShoppingCart, ExternalLink } from 'lucide-react';
 
-const ChatWidget = () => {
-  const [isOpen, setIsOpen] = useState(false)
+// The component now receives the backendUrl as a "prop" from embed.jsx
+const ChatWidget = ({ backendUrl }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -14,35 +15,37 @@ const ChatWidget = () => {
       content: 'Hello! Welcome to Feelori! I\'m here to help you find the perfect products for comfort and wellness. What can I assist you with today?',
       timestamp: new Date()
     }
-  ])
-  const [inputMessage, setInputMessage] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const messagesEndRef = useRef(null)
+  ]);
+  const [inputMessage, setInputMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+    scrollToBottom();
+  }, [messages]);
 
   const sendMessage = async () => {
-    if (!inputMessage.trim() || isLoading) return
+    if (!inputMessage.trim() || isLoading) return;
 
     const userMessage = {
       id: Date.now(),
       type: 'user',
       content: inputMessage,
       timestamp: new Date()
-    }
+    };
 
-    setMessages(prev => [...prev, userMessage])
-    setInputMessage('')
-    setIsLoading(true)
+    setMessages(prev => [...prev, userMessage]);
+    setInputMessage('');
+    setIsLoading(true);
 
     try {
-	const apiUrl = `${import.meta.env.VITE_API_BASE_URL || 'https://feelori-ai-assistant.onrender.com'}/api/chat`;
+      // Use the backendUrl prop to construct the full API endpoint
+      const apiUrl = `${backendUrl}/api/chat`;
+
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -52,9 +55,14 @@ const ChatWidget = () => {
           message: inputMessage,
           history: messages
         })
-      })
+      });
 
-      const data = await response.json()
+      if (!response.ok) {
+        // Handle non-200 responses (like 404, 500)
+        throw new Error(`Server responded with status: ${response.status}`);
+      }
+      
+      const data = await response.json();
 
       if (data.success) {
         const botMessage = {
@@ -65,30 +73,31 @@ const ChatWidget = () => {
           product: data.response.product,
           products: data.response.products,
           timestamp: new Date()
-        }
-        setMessages(prev => [...prev, botMessage])
+        };
+        setMessages(prev => [...prev, botMessage]);
       } else {
-        throw new Error(data.error || 'Failed to get response')
+        throw new Error(data.error || 'Failed to get response');
       }
     } catch (error) {
+      console.error('Error sending message:', error);
       const errorMessage = {
         id: Date.now() + 1,
         type: 'bot',
         content: 'Sorry, I\'m having trouble responding right now. Please try again in a moment.',
         timestamp: new Date()
-      }
-      setMessages(prev => [...prev, errorMessage])
+      };
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      sendMessage()
+      e.preventDefault();
+      sendMessage();
     }
-  }
+  };
 
   const ProductCard = ({ product }) => (
     <Card className="mt-2 max-w-sm">
@@ -98,8 +107,8 @@ const ChatWidget = () => {
             <ShoppingCart className="w-6 h-6 text-gray-500" />
           </div>
           <div className="flex-1">
-            <h4 className="font-semibold text-sm">{product.name}</h4>
-            <p className="text-xs text-gray-600 mt-1">{product.description}</p>
+            <h4 className="font-semibold text-sm">{product.title || product.name}</h4>
+            <p className="text-xs text-gray-600 mt-1">{product.summary || product.description}</p>
             <div className="flex items-center justify-between mt-2">
               <span className="font-bold text-green-600">${product.price}</span>
               <Button size="sm" className="text-xs">
@@ -107,18 +116,11 @@ const ChatWidget = () => {
                 <ExternalLink className="w-3 h-3 ml-1" />
               </Button>
             </div>
-            <div className="flex flex-wrap gap-1 mt-2">
-              {product.features?.slice(0, 2).map((feature, index) => (
-                <Badge key={index} variant="secondary" className="text-xs">
-                  {feature}
-                </Badge>
-              ))}
-            </div>
           </div>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 
   const ProductList = ({ products }) => (
     <div className="mt-2 space-y-2">
@@ -126,7 +128,7 @@ const ChatWidget = () => {
         <ProductCard key={product.id} product={product} />
       ))}
     </div>
-  )
+  );
 
   const MessageBubble = ({ message }) => (
     <div className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} mb-4`}>
@@ -154,7 +156,7 @@ const ChatWidget = () => {
         </div>
       </div>
     </div>
-  )
+  );
 
   const QuickActions = () => (
     <div className="p-3 border-t bg-gray-50">
@@ -181,7 +183,7 @@ const ChatWidget = () => {
         ))}
       </div>
     </div>
-  )
+  );
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
@@ -276,4 +278,3 @@ const ChatWidget = () => {
 }
 
 export default ChatWidget
-
