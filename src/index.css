@@ -1,0 +1,46 @@
+/* ========================================================
+   Feelori Chat Widget: Forceful Floating Styles
+   Ensures your widget floats and is not hidden by theme CSS
+   ======================================================== */
+
+/* Floating bubble button (when chat is closed) */
+button.chat-bubble {
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50% !important;
+  background-color: #ff4d6d !important;
+  color: white !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2) !important;
+  border: none !important;
+  transition: transform 0.2s ease !important;
+}
+
+button.chat-bubble:hover {
+  transform: scale(1.1);
+}
+
+/* Open chat window container */
+.chat-window {
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  width: 370px !important;
+  height: 600px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Tailwind directives (keep these last) */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

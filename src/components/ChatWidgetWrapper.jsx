@@ -2,42 +2,39 @@ import { useState } from 'react';
 import ChatWidget from './ChatWidget';
 import { MessageCircle, X } from 'lucide-react';
 
-// This wrapper will receive the backendUrl from the embed.jsx file
 const ChatWidgetWrapper = ({ backendUrl }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Use a different color for the bubble to match your theme
-  const bubbleColor = "bg-purple-600 hover:bg-purple-700";
-
   return (
-    <>
-      {/* Floating Chat Bubble */}
-      {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className={`fixed bottom-6 right-6 ${bubbleColor} text-white p-4 rounded-full shadow-lg z-50`}
-          aria-label="Open Chat"
-        >
-          <MessageCircle className="w-6 h-6" />
-        </button>
-      )}
-
-      {/* Chat Window */}
+    // This main container lives inside the shadow DOM
+    <div>
+      {/* Floating chat window */}
       {isOpen && (
-        <div className="fixed bottom-20 right-6 w-80 h-[500px] bg-white border shadow-xl rounded-lg flex flex-col z-50">
-          <div className="flex justify-between items-center p-3 border-b bg-purple-50 rounded-t-lg">
-            <span className="text-sm font-semibold text-gray-800">Feelori Assistant</span>
-            <button onClick={() => setIsOpen(false)} aria-label="Close Chat">
-              <X className="w-4 h-4 text-gray-500" />
+        <div className="fixed bottom-24 right-5 w-[370px] h-[600px] bg-white border border-gray-300 shadow-2xl rounded-xl flex flex-col z-[9999]">
+          {/* Header */}
+          <div className="flex justify-between items-center p-4 border-b bg-gray-50 rounded-t-xl">
+            <h3 className="font-bold text-gray-800">Feelori Assistant</h3>
+            <button onClick={() => setIsOpen(false)} aria-label="Close Chat" className="p-1 hover:bg-gray-200 rounded-full">
+              <X className="w-5 h-5 text-gray-600" />
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto p-2">
-            {/* The backendUrl is now passed down to the ChatWidget */}
+          <div className="flex-1 overflow-y-auto min-h-0">
             <ChatWidget backendUrl={backendUrl} />
           </div>
         </div>
       )}
-    </>
+
+      {/* Floating chat bubble */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-5 right-5 bg-[#ff4d6d] hover:bg-[#e6395b] text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center z-[9999] transition-transform hover:scale-110"
+          aria-label="Open Chat"
+        >
+          <MessageCircle className="w-8 h-8" />
+        </button>
+      )}
+    </div>
   );
 };
 
